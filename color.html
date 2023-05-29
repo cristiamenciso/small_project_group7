@@ -1,3 +1,4 @@
+
 <html>
 <head>
 	<title>COP 4331 LAMP Stack Demo</title>
@@ -11,6 +12,28 @@
 		readCookie();
 	}, false);
 	</script>
+	
+	<!-- Add CSS styles for the pop-up window -->
+	<style>
+		.overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.5);
+			display: none;
+			justify-content: center;
+			align-items: center;
+		}
+		
+		.modal {
+			width: 300px;
+			background-color: white;
+			padding: 20px;
+			border-radius: 5px;
+		}
+	</style>
 	
 </head>
 <body>
@@ -26,16 +49,28 @@
 	<br />
 
 	<input type="text" id="searchText" placeholder="Contact To Search For"/>
-	<button type="button" id="searchColorButton" class="buttons" onclick="searchColor();"> Search Contacts </button><br />
-	<span id="colorSearchResult"></span>
-	<p id="colorList">
+	<button type="button" id="searchContactButton" class="buttons" onclick="searchContacts();"> Search Contacts </button><br />
+	<span id="contactSearchResult"></span>
+	<p id="contactList">
 	</p><br /><br />
 
-	<input type="text" id="colorText" placeholder="Contact To Add">
-	<button type="button" id="addColorButton" class="buttons" onclick="addColor();"> Add Contact </button><br />
-	<span id="colorAddResult"></span>
+	<script>/*<input type="text" id="colorText" placeholder="Contact To Add">*/</script>
+	<button type="button" id="addColorButton" class="buttons" onclick="openAddContactModal();"> Add Contact </button><br />
+	<span id="contactAddResult"></span>
+</div>
+
+<!-- Add the pop-up window markup -->
+<div id="addContactModal" class="overlay">
+	<div class="modal">
+		<h2>Add Contact</h2>
+		<input type="text" id="firstNameInput" placeholder="First Name">
+		<input type="text" id="lastNameInput" placeholder="Last Name">
+		<input type="text" id="phoneInput" placeholder="Phone">
+		<input type="text" id="emailInput" placeholder="Email">
+		<button type="button" onclick="addContact();" class="buttons">Save</button>
+		<button type="button" onclick="closeAddContactModal();" class="buttons">Cancel</button>
+	</div>
 </div>
 
 </body>
 </html>
-
