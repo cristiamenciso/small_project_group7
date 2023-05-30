@@ -1,4 +1,4 @@
-const urlBase = 'http://COP4331-5.com/LAMPAPI';
+const urlBase = 'http://COPPARADISE.CLUB/LAMPAPI';
 const extension = 'php';
 
 let userId = 0;
@@ -108,78 +108,91 @@ function doLogout()
 	window.location.href = "index.html";
 }
 
-function addColor()
-{
-	let newColor = document.getElementById("colorText").value;
-	document.getElementById("colorAddResult").innerHTML = "";
 
-	let tmp = {color:newColor,userId,userId};
-	let jsonPayload = JSON.stringify( tmp );
+function openAddContactModal() {
+	document.getElementById("addContactModal").style.display = "flex";
+}
 
-	let url = urlBase + '/AddColor.' + extension;
-	
+function closeAddContactModal() {
+	document.getElementById("addContactModal").style.display = "none";
+}
+
+function addContact() {
+	let firstName = document.getElementById("firstNameInput").value;
+	let lastName = document.getElementById("lastNameInput").value;
+	let phone = document.getElementById("phoneInput").value;
+	let email = document.getElementById("emailInput").value;
+
+	document.getElementById("contactAddResult").innerHTML = "";
+
+	let requestData = {
+		firstname: firstName,
+		lastname: lastName,
+		phone: phone,
+		email: email,
+		userId: userId
+	};
+	let jsonPayload = JSON.stringify(requestData);
+
+	let url = urlBase + '/AddContact.' + extension;
+
 	let xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
 	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-	try
-	{
-		xhr.onreadystatechange = function() 
-		{
-			if (this.readyState == 4 && this.status == 200) 
-			{
-				document.getElementById("colorAddResult").innerHTML = "Color has been added";
+	try {
+		xhr.onreadystatechange = function () {
+			if (this.readyState == 4 && this.status == 200) {
+				document.getElementById("contactAddResult").innerHTML = "Contact has been added";
+				closeAddContactModal();
 			}
 		};
 		xhr.send(jsonPayload);
+	} catch (err) {
+		document.getElementById("contactAddResult").innerHTML = err.message;
 	}
-	catch(err)
-	{
-		document.getElementById("colorAddResult").innerHTML = err.message;
-	}
-	
 }
 
-function searchColor()
-{
-	let srch = document.getElementById("searchText").value;
-	document.getElementById("colorSearchResult").innerHTML = "";
-	
-	let colorList = "";
 
-	let tmp = {search:srch,userId:userId};
-	let jsonPayload = JSON.stringify( tmp );
+function searchContacts() {
+  let search = document.getElementById("searchText").value;
+  document.getElementById("contactSearchResult").innerHTML = "";
 
-	let url = urlBase + '/SearchColors.' + extension;
-	
-	let xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-	try
-	{
-		xhr.onreadystatechange = function() 
-		{
-			if (this.readyState == 4 && this.status == 200) 
-			{
-				document.getElementById("colorSearchResult").innerHTML = "Color(s) has been retrieved";
-				let jsonObject = JSON.parse( xhr.responseText );
-				
-				for( let i=0; i<jsonObject.results.length; i++ )
-				{
-					colorList += jsonObject.results[i];
-					if( i < jsonObject.results.length - 1 )
-					{
-						colorList += "<br />\r\n";
-					}
-				}
-				
-				document.getElementsByTagName("p")[0].innerHTML = colorList;
-			}
-		};
-		xhr.send(jsonPayload);
-	}
-	catch(err)
-	{
-		document.getElementById("colorSearchResult").innerHTML = err.message;
-	}
-	
+  let contactList = "";
+
+  let requestData = {
+    search: search,
+    userId: userId,
+  };
+  let jsonPayload = JSON.stringify(requestData);
+
+  let url = urlBase + '/SearchContacts.php';
+
+  let xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+  try {
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("contactSearchResult").innerHTML =
+          "Contact(s) have been retrieved";
+        let jsonResponse = JSON.parse(xhr.responseText);
+
+        for (let i = 0; i < jsonResponse.results.length; i++) {
+          let contact = jsonResponse.results[i];
+          contactList += "First Name: " + contact.FirstName + "<br>";
+          contactList += "Last Name: " + contact.LastName + "<br>";
+          contactList += "ID: " + contact.ID + "<br>";
+          contactList += "Phone: " + contact.Phone + "<br>";
+          contactList += "Email: " + contact.Email + "<br><br>";
+        }
+
+        document.getElementById("contactList").innerHTML = contactList;
+      }
+    };
+    xhr.send(jsonPayload);
+  } catch (err) {
+    document.getElementById("contactSearchResult").innerHTML = err.message;
+  }
 }
+
+

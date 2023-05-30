@@ -1,0 +1,32 @@
+@startuml ContactBook
+
+!define table(x) class x << (T,#FFAAAA) >>
+!define primary_key(x) <u>x</u>
+!define foreign_key(x) <u>x</u>
+
+hide circle
+hide empty members
+
+package "COP4331" {
+    entity "Users" as Users {
+        primary_key(ID) INT
+        DateCreated DATETIME
+        DateLastLoggedIn DATETIME
+        FirstName VARCHAR(50)
+        LastName VARCHAR(50)
+        Login VARCHAR(50)
+        Password VARCHAR(50)
+    }
+
+    entity "Contacts" as Contacts {
+        primary_key(ID) INT
+        Name VARCHAR(50)
+        Phone VARCHAR(50)
+        Email VARCHAR(50)
+        foreign_key(UserID) INT
+    }
+
+    Users --{ Contacts
+}
+
+@enduml
