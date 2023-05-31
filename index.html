@@ -8,13 +8,19 @@
 </head>
 <body>
 
-<h1 id="title">COP 4331 LAMP Stack Demo</h1>
+<!--<h1 id="title">Contact Manager</h1>-->
+
+<div id ="headerDiv">
+	<span id="title">Contact Keeper</span>
+</div>
 
 <div id="loginDiv">
 	<span id="inner-title">PLEASE LOG IN</span>
 	<input type="text" id="loginName" placeholder="Username" /><br />
 	<input type="password" id="loginPassword" placeholder="Password"/><br />
-	<button type="button" id="loginButton" class="buttons" onclick="doLogin();"> Do It </button>
+	<button type="button" id="loginButton" class="buttons" onclick="doLogin();"> Login </button><br />
+	<span id="outer-title">Don't have an account?</span><br />
+	<button type="button" id="registerButton" class="buttons" onclick="doRegister();"> Register </button>
 	<span id="loginResult"></span>
 </div>
 
