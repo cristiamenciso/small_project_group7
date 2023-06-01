@@ -118,38 +118,52 @@ function closeAddContactModal() {
 }
 
 function addContact() {
-	let firstName = document.getElementById("firstNameInput").value;
-	let lastName = document.getElementById("lastNameInput").value;
-	let phone = document.getElementById("phoneInput").value;
-	let email = document.getElementById("emailInput").value;
+  let firstName = document.getElementById("firstNameInput").value;
+  let lastName = document.getElementById("lastNameInput").value;
+  let phone = document.getElementById("phoneInput").value;
+  let email = document.getElementById("emailInput").value;
 
-	document.getElementById("contactAddResult").innerHTML = "";
+  document.getElementById("contactAddResult").innerHTML = "";
 
-	let requestData = {
-		firstname: firstName,
-		lastname: lastName,
-		phone: phone,
-		email: email,
-		userId: userId
-	};
-	let jsonPayload = JSON.stringify(requestData);
+  // Regular expressions for phone number and email formats
+  let phoneRegex = /^\d{10}$/; // Assumes 10-digit phone numbers
+  let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-	let url = urlBase + '/AddContact.' + extension;
+  if (!phoneRegex.test(phone)) {
+    document.getElementById("contactAddResult").innerHTML = "Invalid phone number format. Please enter a 10-digit number.";
+    return;
+  }
 
-	let xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-	try {
-		xhr.onreadystatechange = function () {
-			if (this.readyState == 4 && this.status == 200) {
-				document.getElementById("contactAddResult").innerHTML = "Contact has been added";
-				closeAddContactModal();
-			}
-		};
-		xhr.send(jsonPayload);
-	} catch (err) {
-		document.getElementById("contactAddResult").innerHTML = err.message;
-	}
+  if (!emailRegex.test(email)) {
+    document.getElementById("contactAddResult").innerHTML = "Invalid email format. Please enter a valid email address.";
+    return;
+  }
+
+  let requestData = {
+    firstname: firstName,
+    lastname: lastName,
+    phone: phone,
+    email: email,
+    userId: userId
+  };
+  let jsonPayload = JSON.stringify(requestData);
+
+  let url = urlBase + '/AddContact.' + extension;
+
+  let xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+  try {
+    xhr.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("contactAddResult").innerHTML = "Contact has been added";
+        closeAddContactModal();
+      }
+    };
+    xhr.send(jsonPayload);
+  } catch (err) {
+    document.getElementById("contactAddResult").innerHTML = err.message;
+  }
 }
 
 
@@ -194,5 +208,4 @@ function searchContacts() {
     document.getElementById("contactSearchResult").innerHTML = err.message;
   }
 }
-
 
