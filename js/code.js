@@ -171,8 +171,6 @@ function searchContacts() {
   let search = document.getElementById("searchText").value;
   document.getElementById("contactSearchResult").innerHTML = "";
 
-  let contactList = "";
-
   let requestData = {
     search: search,
     userId: userId,
@@ -191,13 +189,30 @@ function searchContacts() {
           "Contact(s) have been retrieved";
         let jsonResponse = JSON.parse(xhr.responseText);
 
+        let contactList = "";
         for (let i = 0; i < jsonResponse.results.length; i++) {
           let contact = jsonResponse.results[i];
-          contactList += "First Name: " + contact.FirstName + "<br>";
-          contactList += "Last Name: " + contact.LastName + "<br>";
-          contactList += "ID: " + contact.ID + "<br>";
-          contactList += "Phone: " + contact.Phone + "<br>";
-          contactList += "Email: " + contact.Email + "<br><br>";
+          contactList +=
+            "<div id='contact-" +
+            contact.ID +
+            "' class='contact' onclick='selectContact(" +
+            contact.ID +
+            ");'>" +
+            "First Name: " +
+            contact.FirstName +
+            "<br>" +
+            "Last Name: " +
+            contact.LastName +
+            "<br>" +
+            "ID: " +
+            contact.ID +
+            "<br>" +
+            "Phone: " +
+            contact.Phone +
+            "<br>" +
+            "Email: " +
+            contact.Email +
+            "<br><br></div>";
         }
 
         document.getElementById("contactList").innerHTML = contactList;
@@ -208,4 +223,24 @@ function searchContacts() {
     document.getElementById("contactSearchResult").innerHTML = err.message;
   }
 }
+
+
+let selectedContactId = null;
+
+function selectContact(contactId) {
+  if (selectedContactId !== null) {
+    // Deselect the currently selected contact
+    let currentlySelectedElement = document.getElementById("contact-" + selectedContactId);
+    currentlySelectedElement.classList.remove("selected");
+  }
+
+  // Select the new contact
+  let newSelectedElement = document.getElementById("contact-" + contactId);
+  newSelectedElement.classList.add("selected");
+
+  selectedContactId = contactId;
+
+  // Now you can do other things with the selected contact...
+}
+
 
