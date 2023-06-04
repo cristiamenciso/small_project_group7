@@ -193,19 +193,13 @@ function searchContacts() {
         for (let i = 0; i < jsonResponse.results.length; i++) {
           let contact = jsonResponse.results[i];
           contactList +=
-            "<div id='contact-" +
-            contact.ID +
-            "' class='contact' onclick='selectContact(" +
-            contact.ID +
-            ");'>" +
+            "<div class='contact' onclick='selectContact(event);' data-id='" +
+            contact.ID +"'>" +
             "First Name: " +
             contact.FirstName +
             "<br>" +
             "Last Name: " +
             contact.LastName +
-            "<br>" +
-            "ID: " +
-            contact.ID +
             "<br>" +
             "Phone: " +
             contact.Phone +
@@ -227,20 +221,54 @@ function searchContacts() {
 
 let selectedContactId = null;
 
-function selectContact(contactId) {
-  if (selectedContactId !== null) {
-    // Deselect the currently selected contact
-    let currentlySelectedElement = document.getElementById("contact-" + selectedContactId);
-    currentlySelectedElement.classList.remove("selected");
+function selectContact(event) {
+  let previouslySelectedContact = document.querySelector(".contact.selected");
+  if (previouslySelectedContact) {
+    previouslySelectedContact.classList.remove("selected");
   }
 
-  // Select the new contact
-  let newSelectedElement = document.getElementById("contact-" + contactId);
-  newSelectedElement.classList.add("selected");
-
-  selectedContactId = contactId;
-
-  // Now you can do other things with the selected contact...
+  event.target.classList.add("selected");
 }
+
+
+
+
+function deleteSelectedContact() {
+  let selectedContact = document.querySelector(".contact.selected");
+  if (!selectedContact) {
+    alert("Please select a contact to delete");
+    return;
+  }
+
+  let contactId = selectedContact.getAttribute("data-id");
+
+  // Add confirmation prompt
+  let confirmation = confirm("Are you sure you want to delete this contact?");
+  if (!confirmation) {
+    return;
+  }
+
+  let jsonPayload = JSON.stringify({ contactId: contactId, userId: userId });
+
+  let url = urlBase + '/DeleteContact.' + extension;
+
+  let xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+  try {
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        // Refresh your contacts list here
+        searchContacts();
+      }
+    };
+    xhr.send(jsonPayload);
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+
+
 
 

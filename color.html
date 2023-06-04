@@ -12,14 +12,6 @@
 	}, false);
 	</script>
 	
-	<style>
-		.contact {
-			cursor: pointer;
-			border: 1px solid #ccc;
-			padding: 10px;
-			margin-bottom: 10px;
-		}
-	</style>
 </head>
 <body>
 	<h1 id="title">COP 4331 LAMP Stack Demo</h1>
@@ -38,6 +30,9 @@
 			<!-- Contact list will be dynamically populated here -->
 		</div>
 		<br /><br />
+
+		<!-- Added Delete button -->
+		<button type="button" id="deleteButton" class="deleteButton" onclick="deleteSelectedContact();"> Delete </button>
 
 		<script>/*<input type="text" id="colorText" placeholder="Contact To Add">*/</script>
 		<button type="button" id="addColorButton" class="buttons" onclick="openAddContactModal();"> Add Contact </button><br />

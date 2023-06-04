@@ -221,3 +221,14 @@ select{
     background-color: blue;
     color: white; /* This is to make the text readable on the blue background */
 }
+
+.contact {
+    cursor: pointer;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.deleteButton {
+    margin-bottom: 10px;
+}
