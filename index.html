@@ -8,12 +8,18 @@
 </head>
 <body>
 
-<!--<h1 id="title">Contact Manager</h1>-->
-
 <div id ="headerDiv">
 	<span id="title">Contact Keeper</span>
 </div>
-
+<!--<div id ="center">
+	<img src="images/Turtle.jpg" style="width:50%">
+</div>
+<style>
+	body
+	 {
+  		background-image: url('images/Turtle.jpg');
+	}
+</style>-->
 <div id="loginDiv">
 	<span id="inner-title">PLEASE LOG IN</span>
 	<input type="text" id="loginName" placeholder="Username" /><br />
@@ -22,7 +28,25 @@
 	<span id="outer-title">Don't have an account?</span><br />
 	<button type="button" id="registerButton" class="buttons" onclick="doRegister();"> Register </button>
 	<span id="loginResult"></span>
+	<span id="registerAddResult"></span>
+	
 </div>
+<div id="addRegisterModal" class = "overlay">
+	<div class="modal">
+		<h2>Register</h2>
+		<input type="text" id="firstNameInput" placeholder="First Name">
+		<input type="text" id="lastNameInput" placeholder="Last Name">
+		<!--<input type="text" id="userIdInput" placeholder="Username">-->
+		<input type="text" id="usernameInput" placeholder="Username">
+		<input type="text" id="passwordInput" placeholder="Password">
+		<button type="button" onclick="addUser();" class="buttons">Save</button>
+		<button type="button" onclick="closeRegisterModal();" class="buttons">Cancel</button>
+	</div>
+
+</div>
+
+
+
 
 </body>
 </html>

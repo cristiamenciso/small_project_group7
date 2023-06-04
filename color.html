@@ -1,4 +1,3 @@
-
 <html>
 <head>
 	<title>COP 4331 LAMP Stack Demo</title>
@@ -12,6 +11,7 @@
 		readCookie();
 	}, false);
 	</script>
+	
 </head>
 <body>
 	<h1 id="title">COP 4331 LAMP Stack Demo</h1>
@@ -26,7 +26,13 @@
 		<input type="text" id="searchText" placeholder="Contact To Search For"/>
 		<button type="button" id="searchContactButton" class="buttons" onclick="searchContacts();"> Search Contacts </button><br />
 		<span id="contactSearchResult"></span>
-		<p id="contactList"></p><br /><br />
+		<div id="contactList">
+			<!-- Contact list will be dynamically populated here -->
+		</div>
+		<br /><br />
+
+		<!-- Added Delete button -->
+		<button type="button" id="deleteButton" class="buttons" onclick="deleteSelectedContact();"> Delete </button>
 
 		<script>/*<input type="text" id="colorText" placeholder="Contact To Add">*/</script>
 		<button type="button" id="addColorButton" class="buttons" onclick="openAddContactModal();"> Add Contact </button><br />
