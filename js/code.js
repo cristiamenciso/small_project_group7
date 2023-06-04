@@ -118,46 +118,58 @@ function closeAddContactModal() {
 }
 
 function addContact() {
-	let firstName = document.getElementById("firstNameInput").value;
-	let lastName = document.getElementById("lastNameInput").value;
-	let phone = document.getElementById("phoneInput").value;
-	let email = document.getElementById("emailInput").value;
+  let firstName = document.getElementById("firstNameInput").value;
+  let lastName = document.getElementById("lastNameInput").value;
+  let phone = document.getElementById("phoneInput").value;
+  let email = document.getElementById("emailInput").value;
 
-	document.getElementById("contactAddResult").innerHTML = "";
+  document.getElementById("contactAddResult").innerHTML = "";
 
-	let requestData = {
-		firstname: firstName,
-		lastname: lastName,
-		phone: phone,
-		email: email,
-		userId: userId
-	};
-	let jsonPayload = JSON.stringify(requestData);
+  // Regular expressions for phone number and email formats
+  let phoneRegex = /^\d{10}$/; // Assumes 10-digit phone numbers
+  let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-	let url = urlBase + '/AddContact.' + extension;
+  if (!phoneRegex.test(phone)) {
+    document.getElementById("contactAddResult").innerHTML = "Invalid phone number format. Please enter a 10-digit number.";
+    return;
+  }
 
-	let xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-	try {
-		xhr.onreadystatechange = function () {
-			if (this.readyState == 4 && this.status == 200) {
-				document.getElementById("contactAddResult").innerHTML = "Contact has been added";
-				closeAddContactModal();
-			}
-		};
-		xhr.send(jsonPayload);
-	} catch (err) {
-		document.getElementById("contactAddResult").innerHTML = err.message;
-	}
+  if (!emailRegex.test(email)) {
+    document.getElementById("contactAddResult").innerHTML = "Invalid email format. Please enter a valid email address.";
+    return;
+  }
+
+  let requestData = {
+    firstname: firstName,
+    lastname: lastName,
+    phone: phone,
+    email: email,
+    userId: userId
+  };
+  let jsonPayload = JSON.stringify(requestData);
+
+  let url = urlBase + '/AddContact.' + extension;
+
+  let xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+  try {
+    xhr.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("contactAddResult").innerHTML = "Contact has been added";
+        closeAddContactModal();
+      }
+    };
+    xhr.send(jsonPayload);
+  } catch (err) {
+    document.getElementById("contactAddResult").innerHTML = err.message;
+  }
 }
 
 
 function searchContacts() {
   let search = document.getElementById("searchText").value;
   document.getElementById("contactSearchResult").innerHTML = "";
-
-  let contactList = "";
 
   let requestData = {
     search: search,
@@ -177,13 +189,24 @@ function searchContacts() {
           "Contact(s) have been retrieved";
         let jsonResponse = JSON.parse(xhr.responseText);
 
+        let contactList = "";
         for (let i = 0; i < jsonResponse.results.length; i++) {
           let contact = jsonResponse.results[i];
-          contactList += "First Name: " + contact.FirstName + "<br>";
-          contactList += "Last Name: " + contact.LastName + "<br>";
-          contactList += "ID: " + contact.ID + "<br>";
-          contactList += "Phone: " + contact.Phone + "<br>";
-          contactList += "Email: " + contact.Email + "<br><br>";
+          contactList +=
+            "<div class='contact' onclick='selectContact(event);' data-id='" +
+            contact.ID +"'>" +
+            "First Name: " +
+            contact.FirstName +
+            "<br>" +
+            "Last Name: " +
+            contact.LastName +
+            "<br>" +
+            "Phone: " +
+            contact.Phone +
+            "<br>" +
+            "Email: " +
+            contact.Email +
+            "<br><br></div>";
         }
 
         document.getElementById("contactList").innerHTML = contactList;
@@ -194,5 +217,58 @@ function searchContacts() {
     document.getElementById("contactSearchResult").innerHTML = err.message;
   }
 }
+
+
+let selectedContactId = null;
+
+function selectContact(event) {
+  let previouslySelectedContact = document.querySelector(".contact.selected");
+  if (previouslySelectedContact) {
+    previouslySelectedContact.classList.remove("selected");
+  }
+
+  event.target.classList.add("selected");
+}
+
+
+
+
+function deleteSelectedContact() {
+  let selectedContact = document.querySelector(".contact.selected");
+  if (!selectedContact) {
+    alert("Please select a contact to delete");
+    return;
+  }
+
+  let contactId = selectedContact.getAttribute("data-id");
+
+  // Add confirmation prompt
+  let confirmation = confirm("Are you sure you want to delete this contact?");
+  if (!confirmation) {
+    return;
+  }
+
+  let jsonPayload = JSON.stringify({ contactId: contactId, userId: userId });
+
+  let url = urlBase + '/DeleteContact.' + extension;
+
+  let xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+  try {
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        // Refresh your contacts list here
+        searchContacts();
+      }
+    };
+    xhr.send(jsonPayload);
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+
+
 
 
