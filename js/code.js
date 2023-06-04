@@ -306,12 +306,12 @@ function doRegister() {
 					return;
 				}
 		
+				// Only change the local variables, but do not set cookie or redirect
 				firstName = jsonObject.firstName;
 				lastName = jsonObject.lastName;
 
-				saveCookie();
-	
-				window.location.href = "color.html";
+				document.getElementById("registerAddResult").innerHTML = "Registration successful. You can now log in.";
+				closeRegisterModal();
 			}
 		};
 		xhr.send(jsonPayload);
@@ -321,3 +321,4 @@ function doRegister() {
 		document.getElementById("registerAddResult").innerHTML = err.message;
 	}
 }
+
