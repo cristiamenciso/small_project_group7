@@ -1,3 +1,9 @@
+const urlBase = 'http://COPPARADISE.CLUB/LAMPAPI';
+const extension = 'php';
+
+let userId = 0;
+let firstName = "";
+let lastName = "";
 
 function doLogin()
 {
@@ -118,6 +124,11 @@ function addContact() {
   let email = document.getElementById("emailInput").value;
 
   document.getElementById("contactAddResult").innerHTML = "";
+
+  if(firstName.length < 2 || lastName.length < 2) {
+    document.getElementById("contactAddResult").innerHTML = "First Name and Last Name must be at least 2 characters.";
+    return;
+  }
 
   // Regular expressions for phone number and email formats
   let phoneRegex = /^\d{10}$/; // Assumes 10-digit phone numbers
@@ -326,3 +337,4 @@ function doRegister() {
 		document.getElementById("registerAddResult").innerHTML = err.message;
 	}
 }
+
