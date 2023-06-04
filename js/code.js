@@ -1,9 +1,3 @@
-const urlBase = 'http://COPPARADISE.CLUB/LAMPAPI';
-const extension = 'php';
-
-let userId = 0;
-let firstName = "";
-let lastName = "";
 
 function doLogin()
 {
@@ -280,8 +274,20 @@ function doRegister() {
 	let firstName = document.getElementById("firstNameInput").value;
 	let lastName = document.getElementById("lastNameInput").value;
 	let password = document.getElementById("passwordInput").value;
-	
+
 	document.getElementById("registerAddResult").innerHTML = "";
+
+	if(username.length < 2 || firstName.length < 2 || lastName.length < 2) {
+		document.getElementById("registerAddResult").innerHTML = "Username, First Name, and Last Name must be at least 2 characters.";
+		return;
+	}
+
+	// Check password strength
+	let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/;
+	if(!passwordRegex.test(password)) {
+		document.getElementById("registerAddResult").innerHTML = "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.";
+		return;
+	}
 
 	let tmp = {login:username, firstName:firstName, lastName:lastName, password:password};
 	let jsonPayload = JSON.stringify(tmp);
@@ -299,14 +305,13 @@ function doRegister() {
 			{
 				let jsonObject = JSON.parse(xhr.responseText);
 				userId = jsonObject.id;
-		
+
 				if(userId < 1)
 				{		
 					document.getElementById("registerAddResult").innerHTML = "Registration failed";
 					return;
 				}
 		
-				// Only change the local variables, but do not set cookie or redirect
 				firstName = jsonObject.firstName;
 				lastName = jsonObject.lastName;
 
@@ -321,4 +326,3 @@ function doRegister() {
 		document.getElementById("registerAddResult").innerHTML = err.message;
 	}
 }
-
