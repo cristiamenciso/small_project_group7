@@ -1,0 +1,211 @@
+swagger: '2.0'
+info:
+  title: Contact Keeper
+  description: This is an API for a contact management system.
+  version: '1.0'
+  contact:
+    email: cristiam.enciso@knights.ucf.edu
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+paths:
+  /UpdateContact.php:
+    post:
+      tags:
+      - Contacts
+      summary: Updates a contact
+      operationId: updateContact
+      description: Updates a contact's information
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: updateContactItem
+        description: The contact to be updated
+        schema:
+          $ref: '#/definitions/UpdateContact'
+      responses:
+        200:
+          description: OK
+        404:
+          description: URL Not Found
+  
+  /searchContacts.php:
+    post:
+      tags:
+      - Contacts
+      summary: Search contacts
+      operationId: searchContacts
+      description: Searches for a contact by name
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: searchContactsItem
+        description: The name to search for
+        schema:
+          $ref: '#/definitions/SearchContact'
+      responses:
+        200:
+          description: OK
+        404:
+          description: URL Not Found
+
+  /RegisterUser.php:
+    post:
+      tags:
+      - Users
+      summary: Register a user
+      operationId: registerUser
+      description: Registers a new user
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: newUserItem
+        description: New user to register
+        schema:
+          $ref: '#/definitions/RegisterUser'
+      responses:
+        200:
+          description: OK
+        404:
+          description: URL Not Found
+
+  /Login.php:
+    post:
+      tags:
+      - Users
+      summary: Login a user
+      operationId: loginUser
+      description: Log in an existing user
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: loginUserItem
+        description: User login credentials
+        schema:
+          $ref: '#/definitions/LoginUser'
+      responses:
+        200:
+          description: OK
+        404:
+          description: URL Not Found
+
+  /DeleteContact.php:
+    post:
+      tags:
+      - Contacts
+      summary: Deletes a contact
+      operationId: deleteContact
+      description: Deletes a contact from the database
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: deleteContactItem
+        description: The contact to be deleted
+        schema:
+          $ref: '#/definitions/DeleteContact'
+      responses:
+        200:
+          description: OK
+        404:
+          description: URL Not Found
+
+  /AddContact.php:
+    post:
+      tags:
+      - Contacts
+      summary: Adds a new contact
+      operationId: addContact
+      description: Adds a new contact to the database
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: addContactItem
+        description: New contact to be added
+        schema:
+          $ref: '#/definitions/AddContact'
+      responses:
+        200:
+          description: OK
+        404:
+          description: URL Not Found
+
+definitions:
+  UpdateContact:
+    type: object
+    properties:
+      userId:
+        type: integer
+      contactId:
+        type: integer
+      firstName:
+        type: string
+      lastName:
+        type: string
+      phone:
+        type: string
+      email:
+        type: string
+  SearchContact:
+    type: object
+    properties:
+      userId:
+        type: integer
+      search:
+        type: string
+  RegisterUser:
+    type: object
+    properties:
+      firstname:
+        type: string
+      lastname:
+        type: string
+      login:
+        type: string
+      password:
+        type: string
+  LoginUser:
+    type: object
+    properties:
+      login:
+        type: string
+      password:
+        type: string
+  DeleteContact:
+    type: object
+    properties:
+      userId:
+        type: integer
+      contactId:
+        type: integer
+  AddContact:
+    type: object
+    properties:
+      userId:
+        type: integer
+      firstName:
+        type: string
+      lastName:
+        type: string
+      phone:
+        type: string
+      email:
+        type: string

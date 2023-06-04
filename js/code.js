@@ -267,8 +267,57 @@ function deleteSelectedContact() {
     alert(err.message);
   }
 }
+function openRegisterModal() {
+	document.getElementById("addRegisterModal").style.display = "flex";
+}
 
+function closeRegisterModal() {
+	document.getElementById("addRegisterModal").style.display = "none";
+}
 
+function doRegister() {
+	let username = document.getElementById("userIdInput").value;
+	let firstName = document.getElementById("firstNameInput").value;
+	let lastName = document.getElementById("lastNameInput").value;
+	let password = document.getElementById("passwordInput").value;
+	
+	document.getElementById("registerAddResult").innerHTML = "";
 
+	let tmp = {login:username, firstName:firstName, lastName:lastName, password:password};
+	let jsonPayload = JSON.stringify(tmp);
+	
+	let url = urlBase + '/RegisterUser.' + extension;
 
+	let xhr = new XMLHttpRequest();
+	xhr.open("POST", url, true);
+	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+	try
+	{
+		xhr.onreadystatechange = function() 
+		{
+			if (this.readyState == 4 && this.status == 200) 
+			{
+				let jsonObject = JSON.parse(xhr.responseText);
+				userId = jsonObject.id;
+		
+				if(userId < 1)
+				{		
+					document.getElementById("registerAddResult").innerHTML = "Registration failed";
+					return;
+				}
+		
+				firstName = jsonObject.firstName;
+				lastName = jsonObject.lastName;
 
+				saveCookie();
+	
+				window.location.href = "color.html";
+			}
+		};
+		xhr.send(jsonPayload);
+	}
+	catch(err)
+	{
+		document.getElementById("registerAddResult").innerHTML = err.message;
+	}
+}
