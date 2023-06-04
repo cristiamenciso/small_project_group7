@@ -125,6 +125,11 @@ function addContact() {
 
   document.getElementById("contactAddResult").innerHTML = "";
 
+  if(firstName.length < 2 || lastName.length < 2) {
+    document.getElementById("contactAddResult").innerHTML = "First Name and Last Name must be at least 2 characters.";
+    return;
+  }
+
   // Regular expressions for phone number and email formats
   let phoneRegex = /^\d{10}$/; // Assumes 10-digit phone numbers
   let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -193,20 +198,21 @@ function searchContacts() {
         for (let i = 0; i < jsonResponse.results.length; i++) {
           let contact = jsonResponse.results[i];
           contactList +=
-            "<div class='contact' onclick='selectContact(event);' data-id='" +
-            contact.ID +"'>" +
-            "First Name: " +
-            contact.FirstName +
-            "<br>" +
-            "Last Name: " +
-            contact.LastName +
-            "<br>" +
-            "Phone: " +
-            contact.Phone +
-            "<br>" +
-            "Email: " +
-            contact.Email +
-            "<br><br></div>";
+              "<div class='contact' onclick='selectContact(event);' data-id='" +
+              contact.ID +"'>" +
+              "First Name: <span class='firstName'>" +
+              contact.FirstName +
+              "</span><br>" +
+              "Last Name: <span class='lastName'>" +
+              contact.LastName +
+              "</span><br>" +
+              "Phone: <span class='phone'>" +
+              contact.Phone +
+              "</span><br>" +
+              "Email: <span class='email'>" +
+              contact.Email +
+              "</span><br><br></div>";
+
         }
 
         document.getElementById("contactList").innerHTML = contactList;
@@ -267,8 +273,161 @@ function deleteSelectedContact() {
     alert(err.message);
   }
 }
+function openRegisterModal() {
+	document.getElementById("addRegisterModal").style.display = "flex";
+}
 
+function closeRegisterModal() {
+	document.getElementById("addRegisterModal").style.display = "none";
+}
 
+function doRegister() {
+	let username = document.getElementById("userIdInput").value;
+	let firstName = document.getElementById("firstNameInput").value;
+	let lastName = document.getElementById("lastNameInput").value;
+	let password = document.getElementById("passwordInput").value;
 
+	document.getElementById("registerAddResult").innerHTML = "";
 
+	if(username.length < 2 || firstName.length < 2 || lastName.length < 2) {
+		document.getElementById("registerAddResult").innerHTML = "Username, First Name, and Last Name must be at least 2 characters.";
+		return;
+	}
 
+	// Check password strength
+	let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/;
+	if(!passwordRegex.test(password)) {
+		document.getElementById("registerAddResult").innerHTML = "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.";
+		return;
+	}
+
+	let tmp = {login:username, firstName:firstName, lastName:lastName, password:password};
+	let jsonPayload = JSON.stringify(tmp);
+	
+	let url = urlBase + '/RegisterUser.' + extension;
+
+	let xhr = new XMLHttpRequest();
+	xhr.open("POST", url, true);
+	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+	try
+	{
+		xhr.onreadystatechange = function() 
+		{
+			if (this.readyState == 4 && this.status == 200) 
+			{
+				let jsonObject = JSON.parse(xhr.responseText);
+				userId = jsonObject.id;
+
+				if(userId < 1)
+				{		
+					document.getElementById("registerAddResult").innerHTML = "Registration failed";
+					return;
+				}
+		
+				firstName = jsonObject.firstName;
+				lastName = jsonObject.lastName;
+
+				document.getElementById("registerAddResult").innerHTML = "Registration successful. You can now log in.";
+				closeRegisterModal();
+			}
+		};
+		xhr.send(jsonPayload);
+	}
+	catch(err)
+	{
+		document.getElementById("registerAddResult").innerHTML = err.message;
+	}
+}
+
+function openUpdateContactModal() {
+	let selectedContact = document.querySelector(".contact.selected");
+	if (!selectedContact) {
+		alert("Please select a contact to update");
+		return;
+	}
+
+	let contactId = selectedContact.getAttribute("data-id");
+	document.getElementById("contactIdInput").value = contactId;
+
+	// Populate the modal with the current contact details
+	document.getElementById("updateFirstNameInput").value = selectedContact.querySelector(".firstName").innerText;
+	document.getElementById("updateLastNameInput").value = selectedContact.querySelector(".lastName").innerText;
+	document.getElementById("updatePhoneInput").value = selectedContact.querySelector(".phone").innerText;
+	document.getElementById("updateEmailInput").value = selectedContact.querySelector(".email").innerText;
+
+	document.getElementById("updateContactModal").style.display = "flex";
+}
+
+function closeUpdateContactModal() {
+	// Clear the modal
+	document.getElementById("contactIdInput").value = "";
+	document.getElementById("updateFirstNameInput").value = "";
+	document.getElementById("updateLastNameInput").value = "";
+	document.getElementById("updatePhoneInput").value = "";
+	document.getElementById("updateEmailInput").value = "";
+
+	document.getElementById("updateContactModal").style.display = "none";
+}
+
+function updateContact() {
+  // Select the currently selected contact
+  let selectedContact = document.querySelector(".contact.selected");
+  if (!selectedContact) {
+    alert("Please select a contact to update");
+    return;
+  }
+
+  let contactId = selectedContact.getAttribute("data-id");
+
+  let firstName = document.getElementById("updateFirstNameInput").value;
+  let lastName = document.getElementById("updateLastNameInput").value;
+  let phone = document.getElementById("updatePhoneInput").value;
+  let email = document.getElementById("updateEmailInput").value;
+
+  if(firstName.length < 2 || lastName.length < 2) {
+    document.getElementById("contactAddResult").innerHTML = "First Name and Last Name must be at least 2 characters.";
+    return;
+  }
+
+  // Regular expressions for phone number and email formats
+  let phoneRegex = /^\d{10}$/; // Assumes 10-digit phone numbers
+  let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!phoneRegex.test(phone)) {
+    document.getElementById("contactAddResult").innerHTML = "Invalid phone number format. Please enter a 10-digit number.";
+    return;
+  }
+
+  if (!emailRegex.test(email)) {
+    document.getElementById("contactAddResult").innerHTML = "Invalid email format. Please enter a valid email address.";
+    return;
+  }
+
+  let requestData = {
+    contactId: contactId,
+    userId: userId,
+    firstName: firstName,
+    lastName: lastName,
+    phone: phone,
+    email: email
+  };
+  let jsonPayload = JSON.stringify(requestData);
+
+  let url = urlBase + '/UpdateContact.' + extension;
+
+  let xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+  try {
+    xhr.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("contactAddResult").innerHTML = "Contact has been updated";
+        closeUpdateContactModal(); // Close the Update Contact modal
+        searchContacts();
+      }
+    };
+    xhr.send(jsonPayload);
+  } catch (err) {
+    document.getElementById("contactAddResult").innerHTML = err.message;
+  }
+}

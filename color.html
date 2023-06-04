@@ -32,7 +32,9 @@
 		<br /><br />
 
 		<!-- Added Delete button -->
-		<button type="button" id="deleteButton" class="deleteButton" onclick="deleteSelectedContact();"> Delete </button>
+		<button type="button" id="deleteButton" class="buttons" onclick="deleteSelectedContact();"> Delete </button>
+
+		<button type="button" id="updateButton" class="buttons" onclick="openUpdateContactModal();"> Update </button>
 
 		<script>/*<input type="text" id="colorText" placeholder="Contact To Add">*/</script>
 		<button type="button" id="addColorButton" class="buttons" onclick="openAddContactModal();"> Add Contact </button><br />
@@ -49,6 +51,19 @@
 			<input type="text" id="emailInput" placeholder="Email">
 			<button type="button" onclick="addContact();" class="buttons">Save</button>
 			<button type="button" onclick="closeAddContactModal();" class="buttons">Cancel</button>
+		</div>
+	</div>
+
+	<div id="updateContactModal" class="overlay">
+		<div class="modal">
+			<h2>Update Contact</h2>
+			<input type="hidden" id="contactIdInput">
+			<input type="text" id="updateFirstNameInput" placeholder="First Name">
+			<input type="text" id="updateLastNameInput" placeholder="Last Name">
+			<input type="text" id="updatePhoneInput" placeholder="Phone">
+			<input type="text" id="updateEmailInput" placeholder="Email">
+			<button type="button" onclick="updateContact();" class="buttons">Save</button>
+			<button type="button" onclick="closeUpdateContactModal();" class="buttons">Cancel</button>
 		</div>
 	</div>
 
