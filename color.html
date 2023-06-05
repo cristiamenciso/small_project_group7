@@ -43,16 +43,17 @@
 
 	<!-- Add the pop-up window markup -->
 	<div id="addContactModal" class="overlay">
-		<div class="modal">
-			<h2>Add Contact</h2>
-			<input type="text" id="firstNameInput" placeholder="First Name">
-			<input type="text" id="lastNameInput" placeholder="Last Name">
-			<input type="text" id="phoneInput" placeholder="Phone">
-			<input type="text" id="emailInput" placeholder="Email">
-			<button type="button" onclick="addContact();" class="buttons">Save</button>
-			<button type="button" onclick="closeAddContactModal();" class="buttons">Cancel</button>
-		</div>
+	<div class="modal">
+		<h2>Add Contact</h2>
+		<input type="text" id="firstNameInput" placeholder="First Name">
+		<input type="text" id="lastNameInput" placeholder="Last Name">
+		<input type="text" id="phoneInput" placeholder="Phone">
+		<input type="text" id="emailInput" placeholder="Email">
+		<span id="contactAddError" style="color:red;"></span> <!-- New Element for error display -->
+		<button type="button" onclick="addContact();" class="buttons">Save</button>
+		<button type="button" onclick="closeAddContactModal();" class="buttons">Cancel</button>
 	</div>
+</div>
 
 	<div id="updateContactModal" class="overlay">
 		<div class="modal">

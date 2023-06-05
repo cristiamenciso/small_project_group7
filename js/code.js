@@ -123,10 +123,10 @@ function addContact() {
   let phone = document.getElementById("phoneInput").value;
   let email = document.getElementById("emailInput").value;
 
-  document.getElementById("contactAddResult").innerHTML = "";
+  document.getElementById("contactAddError").innerHTML = ""; // Modified
 
   if(firstName.length < 2 || lastName.length < 2) {
-    document.getElementById("contactAddResult").innerHTML = "First Name and Last Name must be at least 2 characters.";
+    document.getElementById("contactAddError").innerHTML = "First Name and Last Name must be at least 2 characters."; // Modified
     return;
   }
 
@@ -135,12 +135,12 @@ function addContact() {
   let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   if (!phoneRegex.test(phone)) {
-    document.getElementById("contactAddResult").innerHTML = "Invalid phone number format. Please enter a 10-digit number.";
+    document.getElementById("contactAddError").innerHTML = "Invalid phone number format. Please enter a 10-digit number."; // Modified
     return;
   }
 
   if (!emailRegex.test(email)) {
-    document.getElementById("contactAddResult").innerHTML = "Invalid email format. Please enter a valid email address.";
+    document.getElementById("contactAddError").innerHTML = "Invalid email format. Please enter a valid email address."; // Modified
     return;
   }
 
