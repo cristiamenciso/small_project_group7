@@ -191,7 +191,7 @@ function searchContacts() {
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
         document.getElementById("contactSearchResult").innerHTML =
-          "Contact(s) have been retrieved";
+          "";
         let jsonResponse = JSON.parse(xhr.responseText);
 
         let contactList = "";
@@ -354,7 +354,8 @@ function openUpdateContactModal() {
 	document.getElementById("updateLastNameInput").value = selectedContact.querySelector(".lastName").innerText;
 	document.getElementById("updatePhoneInput").value = selectedContact.querySelector(".phone").innerText;
 	document.getElementById("updateEmailInput").value = selectedContact.querySelector(".email").innerText;
-
+ 
+  document.getElementById("contactUpdateError").innerHTML = ""; // Clear the error message
 	document.getElementById("updateContactModal").style.display = "flex";
 }
 
@@ -365,7 +366,8 @@ function closeUpdateContactModal() {
 	document.getElementById("updateLastNameInput").value = "";
 	document.getElementById("updatePhoneInput").value = "";
 	document.getElementById("updateEmailInput").value = "";
-
+ 
+  document.getElementById("contactUpdateError").innerHTML = ""; // Clear the error message
 	document.getElementById("updateContactModal").style.display = "none";
 }
 
@@ -384,8 +386,11 @@ function updateContact() {
   let phone = document.getElementById("updatePhoneInput").value;
   let email = document.getElementById("updateEmailInput").value;
 
+  // Clear any previous error message
+  document.getElementById("contactUpdateError").innerHTML = "";
+
   if(firstName.length < 2 || lastName.length < 2) {
-    document.getElementById("contactAddResult").innerHTML = "First Name and Last Name must be at least 2 characters.";
+    document.getElementById("contactUpdateError").innerHTML = "First Name and Last Name must be at least 2 characters.";
     return;
   }
 
@@ -394,12 +399,12 @@ function updateContact() {
   let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   if (!phoneRegex.test(phone)) {
-    document.getElementById("contactAddResult").innerHTML = "Invalid phone number format. Please enter a 10-digit number.";
+    document.getElementById("contactUpdateError").innerHTML = "Invalid phone number format. Please enter a 10-digit number.";
     return;
   }
 
   if (!emailRegex.test(email)) {
-    document.getElementById("contactAddResult").innerHTML = "Invalid email format. Please enter a valid email address.";
+    document.getElementById("contactUpdateError").innerHTML = "Invalid email format. Please enter a valid email address.";
     return;
   }
 
@@ -421,13 +426,13 @@ function updateContact() {
   try {
     xhr.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-        document.getElementById("contactAddResult").innerHTML = "Contact has been updated";
+        document.getElementById("contactUpdateError").innerHTML = "Contact has been updated";
         closeUpdateContactModal(); // Close the Update Contact modal
         searchContacts();
       }
     };
     xhr.send(jsonPayload);
   } catch (err) {
-    document.getElementById("contactAddResult").innerHTML = err.message;
+    document.getElementById("contactUpdateError").innerHTML = err.message;
   }
 }
