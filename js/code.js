@@ -282,62 +282,59 @@ function closeRegisterModal() {
 }
 
 function doRegister() {
-	let username = document.getElementById("userIdInput").value;
-	let firstName = document.getElementById("firstNameInput").value;
-	let lastName = document.getElementById("lastNameInput").value;
-	let password = document.getElementById("passwordInput").value;
+    let username = document.getElementById("userIdInput").value;
+    let firstName = document.getElementById("firstNameInput").value;
+    let lastName = document.getElementById("lastNameInput").value;
+    let password = document.getElementById("passwordInput").value;
 
-	document.getElementById("registerAddResult").innerHTML = "";
+    // Clear any previous error message
+    document.getElementById("registerAddError").innerHTML = "";
 
-	if(username.length < 2 || firstName.length < 2 || lastName.length < 2) {
-		document.getElementById("registerAddResult").innerHTML = "Username, First Name, and Last Name must be at least 2 characters.";
-		return;
-	}
+    if(username.length < 2 || firstName.length < 2 || lastName.length < 2) {
+        document.getElementById("registerAddError").innerHTML = "Username, First Name, and Last Name must be at least 2 characters.";
+        return;
+    }
 
-	// Check password strength
-	let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/;
-	if(!passwordRegex.test(password)) {
-		document.getElementById("registerAddResult").innerHTML = "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.";
-		return;
-	}
+    // Check password strength
+    let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/;
+    if(!passwordRegex.test(password)) {
+        document.getElementById("registerAddError").innerHTML = "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.";
+        return;
+    }
 
-	let tmp = {login:username, firstName:firstName, lastName:lastName, password:password};
-	let jsonPayload = JSON.stringify(tmp);
-	
-	let url = urlBase + '/RegisterUser.' + extension;
+    let tmp = {login:username, firstName:firstName, lastName:lastName, password:password};
+    let jsonPayload = JSON.stringify(tmp);
+    
+    let url = urlBase + '/RegisterUser.' + extension;
 
-	let xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-	try
-	{
-		xhr.onreadystatechange = function() 
-		{
-			if (this.readyState == 4 && this.status == 200) 
-			{
-				let jsonObject = JSON.parse(xhr.responseText);
-				userId = jsonObject.id;
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+    try {
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                let jsonObject = JSON.parse(xhr.responseText);
+                userId = jsonObject.id;
 
-				if(userId < 1)
-				{		
-					document.getElementById("registerAddResult").innerHTML = "Registration failed";
-					return;
-				}
-		
-				firstName = jsonObject.firstName;
-				lastName = jsonObject.lastName;
+                if(userId < 1) {		
+                    document.getElementById("registerAddError").innerHTML = "Registration failed";
+                    return;
+                }
+        
+                firstName = jsonObject.firstName;
+                lastName = jsonObject.lastName;
 
-				document.getElementById("registerAddResult").innerHTML = "Registration successful. You can now log in.";
-				closeRegisterModal();
-			}
-		};
-		xhr.send(jsonPayload);
-	}
-	catch(err)
-	{
-		document.getElementById("registerAddResult").innerHTML = err.message;
-	}
+                document.getElementById("registerAddResult").innerHTML = "Registration successful. You can now log in.";
+                closeRegisterModal();
+            }
+        };
+        xhr.send(jsonPayload);
+    }
+    catch(err) {
+        document.getElementById("registerAddError").innerHTML = err.message;
+    }
 }
+
 
 function openUpdateContactModal() {
 	let selectedContact = document.querySelector(".contact.selected");

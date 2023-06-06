@@ -243,6 +243,20 @@ select{
     text-align: center;
     margin-bottom: 10px;
 }
+#registerAddError {
+    color: red;
+    font-size: 1em;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+}
+#contactUpdateError {
+    color: red;
+    font-size: 1em;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+}
 
 a:link {
     color: green;

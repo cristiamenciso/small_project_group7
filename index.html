@@ -22,9 +22,10 @@
 	<span id="registerAddResult"></span>
 	
 </div>
-<div id="addRegisterModal" class = "overlay">
+<div id="addRegisterModal" class="overlay">
 	<div class="modal">
 		<h2>Register</h2>
+		<span id="registerAddError" style="color:red;"></span> <!-- Moved to top of the modal -->
 		<input type="text" id="userIdInput" placeholder="Username">
 		<input type="text" id="firstNameInput" placeholder="First Name">
 		<input type="text" id="lastNameInput" placeholder="Last Name">
@@ -32,5 +33,4 @@
 		<button type="button" onclick="doRegister();" class="buttons">Save</button>
 		<button type="button" onclick="closeRegisterModal();" class="buttons">Cancel</button>
 	</div>
-
 </div>
