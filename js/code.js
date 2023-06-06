@@ -123,10 +123,10 @@ function addContact() {
   let phone = document.getElementById("phoneInput").value;
   let email = document.getElementById("emailInput").value;
 
-  document.getElementById("contactAddResult").innerHTML = "";
+  document.getElementById("contactAddError").innerHTML = ""; // Modified
 
   if(firstName.length < 2 || lastName.length < 2) {
-    document.getElementById("contactAddResult").innerHTML = "First Name and Last Name must be at least 2 characters.";
+    document.getElementById("contactAddError").innerHTML = "First Name and Last Name must be at least 2 characters."; // Modified
     return;
   }
 
@@ -135,12 +135,12 @@ function addContact() {
   let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   if (!phoneRegex.test(phone)) {
-    document.getElementById("contactAddResult").innerHTML = "Invalid phone number format. Please enter a 10-digit number.";
+    document.getElementById("contactAddError").innerHTML = "Invalid phone number format. Please enter a 10-digit number."; // Modified
     return;
   }
 
   if (!emailRegex.test(email)) {
-    document.getElementById("contactAddResult").innerHTML = "Invalid email format. Please enter a valid email address.";
+    document.getElementById("contactAddError").innerHTML = "Invalid email format. Please enter a valid email address."; // Modified
     return;
   }
 
@@ -191,7 +191,7 @@ function searchContacts() {
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
         document.getElementById("contactSearchResult").innerHTML =
-          "Contact(s) have been retrieved";
+          "";
         let jsonResponse = JSON.parse(xhr.responseText);
 
         let contactList = "";
@@ -282,62 +282,59 @@ function closeRegisterModal() {
 }
 
 function doRegister() {
-	let username = document.getElementById("userIdInput").value;
-	let firstName = document.getElementById("firstNameInput").value;
-	let lastName = document.getElementById("lastNameInput").value;
-	let password = document.getElementById("passwordInput").value;
+    let username = document.getElementById("userIdInput").value;
+    let firstName = document.getElementById("firstNameInput").value;
+    let lastName = document.getElementById("lastNameInput").value;
+    let password = document.getElementById("passwordInput").value;
 
-	document.getElementById("registerAddResult").innerHTML = "";
+    // Clear any previous error message
+    document.getElementById("registerAddError").innerHTML = "";
 
-	if(username.length < 2 || firstName.length < 2 || lastName.length < 2) {
-		document.getElementById("registerAddResult").innerHTML = "Username, First Name, and Last Name must be at least 2 characters.";
-		return;
-	}
+    if(username.length < 2 || firstName.length < 2 || lastName.length < 2) {
+        document.getElementById("registerAddError").innerHTML = "Username, First Name, and Last Name must be at least 2 characters.";
+        return;
+    }
 
-	// Check password strength
-	let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/;
-	if(!passwordRegex.test(password)) {
-		document.getElementById("registerAddResult").innerHTML = "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.";
-		return;
-	}
+    // Check password strength
+    let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/;
+    if(!passwordRegex.test(password)) {
+        document.getElementById("registerAddError").innerHTML = "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.";
+        return;
+    }
 
-	let tmp = {login:username, firstName:firstName, lastName:lastName, password:password};
-	let jsonPayload = JSON.stringify(tmp);
-	
-	let url = urlBase + '/RegisterUser.' + extension;
+    let tmp = {login:username, firstName:firstName, lastName:lastName, password:password};
+    let jsonPayload = JSON.stringify(tmp);
+    
+    let url = urlBase + '/RegisterUser.' + extension;
 
-	let xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-	try
-	{
-		xhr.onreadystatechange = function() 
-		{
-			if (this.readyState == 4 && this.status == 200) 
-			{
-				let jsonObject = JSON.parse(xhr.responseText);
-				userId = jsonObject.id;
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+    try {
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                let jsonObject = JSON.parse(xhr.responseText);
+                userId = jsonObject.id;
 
-				if(userId < 1)
-				{		
-					document.getElementById("registerAddResult").innerHTML = "Registration failed";
-					return;
-				}
-		
-				firstName = jsonObject.firstName;
-				lastName = jsonObject.lastName;
+                if(userId < 1) {		
+                    document.getElementById("registerAddError").innerHTML = "Registration failed";
+                    return;
+                }
+        
+                firstName = jsonObject.firstName;
+                lastName = jsonObject.lastName;
 
-				document.getElementById("registerAddResult").innerHTML = "Registration successful. You can now log in.";
-				closeRegisterModal();
-			}
-		};
-		xhr.send(jsonPayload);
-	}
-	catch(err)
-	{
-		document.getElementById("registerAddResult").innerHTML = err.message;
-	}
+                document.getElementById("registerAddResult").innerHTML = "Registration successful. You can now log in.";
+                closeRegisterModal();
+            }
+        };
+        xhr.send(jsonPayload);
+    }
+    catch(err) {
+        document.getElementById("registerAddError").innerHTML = err.message;
+    }
 }
+
 
 function openUpdateContactModal() {
 	let selectedContact = document.querySelector(".contact.selected");
@@ -354,7 +351,8 @@ function openUpdateContactModal() {
 	document.getElementById("updateLastNameInput").value = selectedContact.querySelector(".lastName").innerText;
 	document.getElementById("updatePhoneInput").value = selectedContact.querySelector(".phone").innerText;
 	document.getElementById("updateEmailInput").value = selectedContact.querySelector(".email").innerText;
-
+ 
+  document.getElementById("contactUpdateError").innerHTML = ""; // Clear the error message
 	document.getElementById("updateContactModal").style.display = "flex";
 }
 
@@ -365,7 +363,8 @@ function closeUpdateContactModal() {
 	document.getElementById("updateLastNameInput").value = "";
 	document.getElementById("updatePhoneInput").value = "";
 	document.getElementById("updateEmailInput").value = "";
-
+ 
+  document.getElementById("contactUpdateError").innerHTML = ""; // Clear the error message
 	document.getElementById("updateContactModal").style.display = "none";
 }
 
@@ -384,8 +383,11 @@ function updateContact() {
   let phone = document.getElementById("updatePhoneInput").value;
   let email = document.getElementById("updateEmailInput").value;
 
+  // Clear any previous error message
+  document.getElementById("contactUpdateError").innerHTML = "";
+
   if(firstName.length < 2 || lastName.length < 2) {
-    document.getElementById("contactAddResult").innerHTML = "First Name and Last Name must be at least 2 characters.";
+    document.getElementById("contactUpdateError").innerHTML = "First Name and Last Name must be at least 2 characters.";
     return;
   }
 
@@ -394,12 +396,12 @@ function updateContact() {
   let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   if (!phoneRegex.test(phone)) {
-    document.getElementById("contactAddResult").innerHTML = "Invalid phone number format. Please enter a 10-digit number.";
+    document.getElementById("contactUpdateError").innerHTML = "Invalid phone number format. Please enter a 10-digit number.";
     return;
   }
 
   if (!emailRegex.test(email)) {
-    document.getElementById("contactAddResult").innerHTML = "Invalid email format. Please enter a valid email address.";
+    document.getElementById("contactUpdateError").innerHTML = "Invalid email format. Please enter a valid email address.";
     return;
   }
 
@@ -421,13 +423,13 @@ function updateContact() {
   try {
     xhr.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-        document.getElementById("contactAddResult").innerHTML = "Contact has been updated";
+        document.getElementById("contactUpdateError").innerHTML = "Contact has been updated";
         closeUpdateContactModal(); // Close the Update Contact modal
         searchContacts();
       }
     };
     xhr.send(jsonPayload);
   } catch (err) {
-    document.getElementById("contactAddResult").innerHTML = err.message;
+    document.getElementById("contactUpdateError").innerHTML = err.message;
   }
 }
